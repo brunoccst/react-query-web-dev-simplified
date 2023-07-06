@@ -15,6 +15,12 @@ function App() {
     queryFn: () => wait(1000).then(() => [...POSTS]) // Runs to actually query the data
   })
 
+  // Mutation: changing some type of data
+  const newPostMutation = useMutation({
+    mutationFn: (title: string) => wait(1000)
+      .then(() => POSTS.push({ id: crypto.randomUUID(), title: title }))
+  })
+
   if (postQuery.isLoading) return <h1>Loading...</h1>
   if (postQuery.isError) return <pre>{JSON.stringify(postQuery.error)}</pre>
 
@@ -23,6 +29,9 @@ function App() {
       {postQuery.data.map(post => (
         <div key={post.id}>{post.title}</div>
       ))}
+      <button onClick={() => newPostMutation.mutate("New Post")}>
+        Add New
+      </button>
     </div>
   );
 }
